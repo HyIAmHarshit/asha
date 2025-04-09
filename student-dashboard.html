@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - Aasha Certifications</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #007BFF;
+            --secondary-color: #0056b3;
+            --accent-color: #17a2b8;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        .dashboard-header {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .stat-card i {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--dark-color);
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .course-section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .certificate-section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            color: var(--dark-color);
+            margin: 0;
+        }
+
+        .view-all {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .view-all:hover {
+            text-decoration: underline;
+        }
+
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .course-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .course-image {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+        }
+
+        .course-content {
+            padding: 15px;
+        }
+
+        .course-title {
+            font-size: 1.1rem;
+            margin: 0 0 10px;
+        }
+
+        .course-details {
+            display: flex;
+            justify-content: space-between;
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .progress-container {
+            height: 8px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--primary-color);
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .course-action {
+            display: block;
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 8px;
+            border-radius: 4px;
+            margin-top: 10px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .course-action:hover {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .certificate-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .certificate-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.3s;
+        }
+
+        .certificate-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .certificate-item:last-child {
+            border-bottom: none;
+        }
+
+        .certificate-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .certificate-icon {
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .certificate-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .certificate-name {
+            font-weight: bold;
+            color: var(--dark-color);
+            margin-bottom: 5px;
+        }
+
+        .certificate-date {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .certificate-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .certificate-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .certificate-link:hover {
+            text-decoration: underline;
+        }
+
+        .nav-tabs {
+            border-bottom: 1px solid #dee2e6;
+            margin-bottom: 20px;
+        }
+
+        .nav-tabs .nav-link {
+            color: #495057;
+            background-color: transparent;
+            border: 1px solid transparent;
+            border-top-left-radius: 0.25rem;
+            border-top-right-radius: 0.25rem;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        .nav-tabs .nav-link.active {
+            color: #495057;
+            background-color: #fff;
+            border-color: #dee2e6 #dee2e6 #fff;
+            font-weight: bold;
+        }
+
+        .profile-widget {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+        }
+
+        .profile-info {
+            flex-grow: 1;
+        }
+
+        .profile-name {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .profile-email {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .profile-button {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+        }
+
+        .primary-button {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .primary-button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .outline-button {
+            background-color: white;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+        }
+
+        .outline-button:hover {
+            background-color: #f0f0f0;
+        }
+
+        .upcoming-deadline {
+            display: flex;
+            align-items: center;
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+        }
+
+        .deadline-icon {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        .empty-message {
+            text-align: center;
+            color: #666;
+            padding: 30px;
+        }
+
+        footer {
+            background-color: #343a40;
+            color: white;
+            padding: 20px 0;
+            margin-top: 30px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 15px;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            gap: 20px;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .course-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .profile-widget {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .profile-actions {
+                justify-content: center;
+            }
+            
+            .certificate-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .certificate-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation/Header -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">Aasha Certifications</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="courses.html">Courses</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="student-dashboard.html">My Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Content -->
+    <div class="dashboard-container">
+        <!-- Profile Widget -->
+        <div class="profile-widget">
+            <div class="profile-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="profile-info">
+                <div class="profile-name" id="profile-name">John Doe</div>
+                <div class="profile-email">john.doe@example.com</div>
+                <div class="profile-actions">
+                    <button class="profile-button primary-button">Edit Profile</button>
+                    <button class="profile-button outline-button">Account Settings</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Stats -->
+        <div class="dashboard-stats">
+            <div class="stat-card">
+                <i class="fas fa-book-open"></i>
+                <div class="stat-value" id="enrolled-count">3</div>
+                <div class="stat-label">Enrolled Courses</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-certificate"></i>
+                <div class="stat-value" id="completed-count">1</div>
+                <div class="stat-label">Completed Courses</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-chart-line"></i>
+                <div class="stat-value" id="in-progress-count">2</div>
+                <div class="stat-label">In Progress</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-award"></i>
+                <div class="stat-value" id="certificate-count">1</div>
+                <div class="stat-label">Certificates Earned</div>
+            </div>
+        </div>
+
+        <!-- Course Sections -->
+        <div class="course-section">
+            <!-- Navigation Tabs -->
+            <ul class="nav nav-tabs" id="courseTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="enrolled-tab" data-bs-toggle="tab" data-bs-target="#enrolled" type="button" role="tab" aria-controls="enrolled" aria-selected="true">My Courses</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="recommended-tab" data-bs-toggle="tab" data-bs-target="#recommended" type="button" role="tab" aria-controls="recommended" aria-selected="false">Recommended</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="popular-tab" data-bs-toggle="tab" data-bs-target="#popular" type="button" role="tab" aria-controls="popular" aria-selected="false">Popular Courses</button>
+                </li>
+            </ul>
+
+            <!-- Tab Content -->
+            <div class="tab-content" id="courseTabContent">
+                <!-- Enrolled Courses Tab -->
+                <div class="tab-pane fade show active" id="enrolled" role="tabpanel" aria-labelledby="enrolled-tab">
+                    <div class="section-header">
+                        <h3 class="section-title">My Enrolled Courses</h3>
+                        <a href="#" class="view-all">View All</a>
+                    </div>
+                    <div class="course-grid" id="enrolled-courses">
+                        <!-- Course Card 1 -->
+                        <div class="course-card">
+                            <img src="img/course1.jpg" alt="Course" class="course-image">
+                            <div class="course-content">
+                                <h4 class="course-title">Web Development Fundamentals</h4>
+                                <div class="course-details">
+                                    <span>12 hours</span>
+                                    <span>24 lessons</span>
+                                </div>
+                                <div class="progress-container">
+                                    <div class="progress-bar" style="width: 65%;"></div>
+                                </div>
+                                <div class="progress-text">
+                                    <span>Progress</span>
+                                    <span>65%</span>
+                                </div>
+                                <a href="#" class="course-action">Continue Learning</a>
+                            </div>
+                        </div>
+
+                        <!-- Course Card 2 -->
+                        <div class="course-card">
+                            <img src="img/course2.jpg" alt="Course" class="course-image">
+                            <div class="course-content">
+                                <h4 class="course-title">Python Programming</h4>
+                                <div class="course-details">
+                                    <span>15 hours</span>
+                                    <span>30 lessons</span>
+                                </div>
+                                <div class="progress-container">
+                                    <div class="progress-bar" style="width: 25%;"></div>
+                                </div>
+                                <div class="progress-text">
+                                    <span>Progress</span>
+                                    <span>25%</span>
+                                </div>
+                                <a href="#" class="course-action">Continue Learning</a>
+                            </div>
+                        </div>
+
+                        <!-- Course Card 3 -->
+                        <div class="course-card">
+                            <img src="img/course3.jpg" alt="Course" class="course-image">
+                            <div class="course-content">
+                                <h4 class="course-title">Data Science Essentials</h4>
+                                <div class="course-details">
+                                    <span>20 hours</span>
+                                    <span>40 lessons</span>
+                                </div>
+                                <div class="progress-container">
+                                    <div class="progress-bar" style="width: 100%;"></div>
+                                </div>
+                                <div class="progress-text">
+                                    <span>Completed</span>
+                                    <span>100%</span>
+                                </div>
+                                <a href="#" class="course-action">View Certificate</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recommended Courses Tab -->
+                <div class="tab-pane fade" id="recommended" role="tabpanel" aria-labelledby="recommended-tab">
+                    <div class="section-header">
+                        <h3 class="section-title">Recommended For You</h3>
+                        <a href="#" class="view-all">View All</a>
+                    </div>
+                    <div class="course-grid" id="recommended-courses">
+                        <!-- Course Card 1 -->
+                        <div class="course-card">
+                            <img src="img/course4.jpg" alt="Course" class="course-image">
+                            <div class="course-content">
+                                <h4 class="course-title">Advanced JavaScript</h4>
+                                <div class="course-details">
+                                    <span>18 hours</span>
+                                    <span>36 lessons</span>
+                                </div>
+                                <a href="#" class="course-action">Enroll Now</a>
+                            </div>
+                        </div>
+
+                        <!-- Course Card 2 -->
+                        <div class="course-card">
+                            <img src="img/course5.jpg" alt="Course" class="course-image">
+                            <div class="course-content">
+                                <h4 class="course-title">Machine Learning Basics</h4>
+                                <div class="course-details">
+                                    <span>25 hours</span>
+                                    <span>50 lessons</span>
+                                </div>
+                                <a href="#" class="course-action">Enroll Now</a>
+                            </div>
+                        </div>
+
+                        <!-- Course Card 3 -->
+                        <div class="course-card">
+                            <img src="img/course6.jpg" alt="Course" class="course-image">
+                            <div class="course-content">
+                                <h4 class="course-title">Cloud Computing Fundamentals</h4>
+                                <div class="course-details">
+                                    <span>16 hours</span>
+                                    <span>32 lessons</span>
+                                </div>
+                                <a href="#" class="course-action">Enroll Now</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Popular Courses Tab -->
+                <div class="tab-pane fade" id="popular" role="tabpanel" aria-labelledby="popular-tab">
+                    <div class="section-header">
+                        <h3 class="section-title">Popular Courses</h3>
+                        <a href="#" class="view-all">View All</a>
+                    </div>
+                    <div class="course-grid" id="popular-courses">
+                        <!-- Course Card 1 -->
+                        <div class="course-card">
+                            <img src="img/course7.jpg" alt="Course" class="course-image">
+                            <div class="course-content">
+                                <h4 class="course-title">Artificial Intelligence</h4>
+                                <div class="course-details">
+                                    <span>30 hours</span>
+                                    <span>60 lessons</span>
+                                </div>
+                                <a href="#" class="course-action">Enroll Now</a>
+                            </div>
+                        </div>
+
+                        <!-- Course Card 2 -->
+                        <div class="course-card">
+                            <img src="img/course8.jpg" alt="Course" class="course-image">
+                            <div class="course-content">
+                                <h4 class="course-title">Cybersecurity Essentials</h4>
+                                <div class="course-details">
+                                    <span>22 hours</span>
+                                    <span>44 lessons</span>
+                                </div>
+                                <a href="#" class="course-action">Enroll Now</a>
+                            </div>
+                        </div>
+
+                        <!-- Course Card 3 -->
+                        <div class="course-card">
+                            <img src="img/course9.jpg" alt="Course" class="course-image">
+                            <div class="course-content">
+                                <h4 class="course-title">Blockchain Technology</h4>
+                                <div class="course-details">
+                                    <span>28 hours</span>
+                                    <span>56 lessons</span>
+                                </div>
+                                <a href="#" class="course-action">Enroll Now</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
